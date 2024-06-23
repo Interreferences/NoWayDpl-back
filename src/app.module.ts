@@ -22,6 +22,11 @@ import { ReleaseLabels } from "./releases/release-labels.model";
 import { UsersModule } from './users/users.module';
 import { RoleModule } from './role/role.module';
 import { PlaylistsModule } from './playlists/playlists.module';
+import {User} from "./users/users.model";
+import {Playlist} from "./playlists/playlists.model";
+import {PlaylistTracks} from "./playlists/playlist-tracks.model";
+import {Role} from "./role/role.model";
+
 @Module({
     controllers: [],
     providers: [],
@@ -48,7 +53,11 @@ import { PlaylistsModule } from './playlists/playlists.module';
                 TrackArtists,
                 ReleaseArtists,
                 ReleaseLabels,
-                ReleaseType
+                ReleaseType,
+                Role,
+                User,
+                Playlist,
+                PlaylistTracks
             ],
             autoLoadModels: true,
             synchronize: true,
