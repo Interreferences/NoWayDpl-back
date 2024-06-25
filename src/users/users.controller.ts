@@ -18,7 +18,7 @@ export class UsersController {
 
     @Post('registerAdmin')
     async registrationAdmin(@Body() createUserDto: CreateUsertDto) {
-        const user = await this.usersService.registrationUser(createUserDto);
+        const user = await this.usersService.registrationAdmin(createUserDto);
         return {
             message: 'Пользователь успешно зарегистрирован',
             user,
