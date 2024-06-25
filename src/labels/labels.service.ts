@@ -14,11 +14,15 @@ export class LabelsService {
         return await this.labelRepository.create(dto);
     }
 
-    async findAllLabels(paginationQuery: { page: number, limit: number }): Promise<Label[]> {
+    async findAllLabels(paginationQuery: { page: number, limit: number }): Promise<{ labels: Label[], maxPages: number }> {
         const { page, limit } = paginationQuery;
         const offset = (page - 1) * limit;
 
-        return this.labelRepository.findAll({ offset, limit });
+        const { rows: labels, count: totalCount } = await this.labelRepository.findAndCountAll({ offset, limit });
+
+        const maxPages = Math.ceil(totalCount / limit);
+
+        return { labels, maxPages };
     }
 
     async findLabelById(id: number): Promise<Label> {
