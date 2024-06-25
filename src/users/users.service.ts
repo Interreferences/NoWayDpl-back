@@ -4,6 +4,7 @@ import { User } from './users.model';
 import { CreateUsertDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleService } from '../role/role.service';
+import {Role} from "../role/role.model";
 
 @Injectable()
 export class UsersService {
@@ -13,13 +14,17 @@ export class UsersService {
     ) {}
 
     async findUserByLogin(login: string): Promise<User | null> {
-        return this.userRepository.findOne({ where: { login } });
+        return this.userRepository.findOne({
+            where: { login },
+            attributes: ['login', 'nickname', 'password'],
+            include: [{ model: Role, attributes: ['id', 'title'] }]
+        });
     }
 
     async registrationUser(dto: CreateUsertDto) {
         const existingUser = await this.findUserByLogin(dto.login);
         if (existingUser) {
-            throw new ConflictException('User with this login already exists');
+            throw new ConflictException('Пользователь с таким логином уже существует');
         }
 
         const hashPassword = await bcrypt.hash(dto.password, 10);
@@ -31,7 +36,9 @@ export class UsersService {
             roleId: userRole.id,
         });
 
-        return user;
+        const newUser = await this.findUserByLogin(dto.login);
+
+        return newUser;
     }
 
     async loginUser(login: string, password: string): Promise<User> {
@@ -51,7 +58,7 @@ export class UsersService {
     async registrationAdmin(dto: CreateUsertDto) {
         const existingUser = await this.findUserByLogin(dto.login);
         if (existingUser) {
-            throw new ConflictException('User with this login already exists');
+            throw new ConflictException('Пользователь с таким логином уже существует');
         }
 
         const hashPassword = await bcrypt.hash(dto.password, 10);
@@ -63,7 +70,8 @@ export class UsersService {
             roleId: userRole.id,
         });
 
-        return user;
-    }
+        const newUser = await this.findUserByLogin(dto.login);
 
+        return newUser;
+    }
 }
