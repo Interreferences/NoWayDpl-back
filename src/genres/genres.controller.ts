@@ -13,12 +13,10 @@ export class GenresController {
 
     @Get()
     async getAll(
-        @Query('limit') limit: string,
-        @Query('offset') offset: string
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10
     ) {
-        const limitNumber = parseInt(limit, 10) || 10;  // Устанавливаем значение по умолчанию для limit
-        const offsetNumber = parseInt(offset, 10) || 0;  // Устанавливаем значение по умолчанию для offset
-        return await this.genresService.getAllGenres(limitNumber, offsetNumber);
+        return this.genresService.getAllGenres({ page, limit });
     }
 
     @Get('search/:name')
