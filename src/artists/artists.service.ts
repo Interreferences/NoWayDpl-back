@@ -36,13 +36,15 @@ export class ArtistsService {
         return artist;
     }
 
-    async findAllArtists(limit: number, offset: number): Promise<{ artists: Artist[], total: number }> {
-        const { rows: artists, count: total } = await this.artistRepository.findAndCountAll({
-            attributes: ['id', 'name', 'avatar'],
-            limit,
-            offset
-        });
-        return { artists, total };
+    async findAllArtists(paginationQuery: { page: number, limit: number }): Promise<{ artists: Artist[], maxPages: number }> {
+        const { page, limit } = paginationQuery;
+        const offset = (page - 1) * limit;
+
+        const { rows: artists, count: totalCount } = await this.artistRepository.findAndCountAll({ offset, limit });
+
+        const maxPages = Math.ceil(totalCount / limit);
+
+        return { artists, maxPages };
     }
 
     async findArtistById(id: number) {

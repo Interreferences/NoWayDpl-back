@@ -30,10 +30,11 @@ export class ArtistsController {
     }
 
     @Get()
-    async findAll(@Query('limit') limit: string, @Query('offset') offset: string) {
-        const limitNumber = parseInt(limit, 10) || 10;  // Устанавливаем значение по умолчанию для limit
-        const offsetNumber = parseInt(offset, 10) || 0;  // Устанавливаем значение по умолчанию для offset
-        return await this.artistsService.findAllArtists(limitNumber, offsetNumber);
+    async findAll(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10
+    ) {
+        return this.artistsService.findAllArtists({ page, limit });
     }
 
     @Get(':id')
