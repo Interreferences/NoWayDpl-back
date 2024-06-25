@@ -16,12 +16,16 @@ export class GenresService {
         return genre;
     }
 
-    async getAllGenres(limit: number, offset: number): Promise<{ genres: Genres[], total: number }> {
-        const { rows: genres, count: total } = await this.genreRepository.findAndCountAll({
-            limit,
-            offset
-        });
-        return { genres, total };
+    async getAllGenres(limit: number, offset: number): Promise<{ genres: Genres[], maxPages: number }> {
+        const { page, limit } = paginationQuery;
+        const offset = (page - 1) * limit;
+
+        const { rows: labels, count: totalCount } = await this.genreRepository.findAndCountAll({ offset, limit });
+
+        const maxPages = Math.ceil(totalCount / limit);
+
+        return { labels, maxPages };
+
     }
 
     async getGenreById(id: number) {
