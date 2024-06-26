@@ -5,6 +5,7 @@ import { LabelDto } from './dto/create-label.dto';
 import {Op} from "sequelize";
 import {Artist} from "../artists/artists.model";
 import {Release} from "../releases/releases.model";
+import {ReleaseType} from "../release-type/release-type.model";
 
 @Injectable()
 export class LabelsService {
@@ -27,23 +28,26 @@ export class LabelsService {
 
     async findLabelById(id: number): Promise<Label> {
         return await this.labelRepository.findByPk(id,{
-            include: [
+            include:[
                 {
-                model: Release,
-                through: { attributes: [] },
-                attributes: ['id', 'title', 'cover', 'releaseDate'],
-                    include: [
-                        {
-                            model: Artist,
-                            attributes: ['id', 'name'],
-                            through: { attributes: [] },
-                        },
-                        {
-                            model: Label,
-                            attributes: ['id', 'name'],
-                            through: { attributes: [] },
-                        },
-                    ],
+                  model:Release,
+                  attributes: ['id', 'title', 'cover', 'releaseDate'],
+                  include: [
+                      {
+                          model: ReleaseType,
+                          attributes: ['id', 'title'],
+                      },
+                      {
+                        model:Artist,
+                        attributes: ['id', 'name'],
+                        through: { attributes: [] },
+                      },
+                      {
+                          model: Label,
+                          attributes: ['id', 'name'],
+                          through: { attributes: [] },
+                      },
+                  ],
                 },
             ],
         });

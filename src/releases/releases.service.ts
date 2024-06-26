@@ -97,7 +97,7 @@ export class ReleasesService {
                     through: { attributes: [] },
                 },
             ],
-            })
+        })
         return releases;
     }
 
