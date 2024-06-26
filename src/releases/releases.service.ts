@@ -91,6 +91,11 @@ export class ReleasesService {
                     attributes: ['id', 'name'],
                     through: { attributes: [] },
                 },
+                {
+                    model: Label,
+                    attributes: ['id', 'title'],
+                    through: { attributes: [] },
+                },
             ],
             })
         return releases;
