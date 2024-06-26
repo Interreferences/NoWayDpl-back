@@ -190,4 +190,89 @@ export class TracksService {
         });
     }
 
+    async findAllTracksReleased() {
+        return await this.trackRepository.findAll({
+            attributes: ['id', 'title', 'audio', 'explicit_content', 'listens', 'releaseId'],
+            where: {
+                releaseId: {
+                    [Op.ne]: null,
+                },
+            },
+            include: [
+                {
+                    model: Artist,
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] },
+                },
+                {
+                    model: Release,
+                    attributes: ['id', 'title', 'cover'],
+                },
+            ],
+        });
+    }
+
+    async findTracksByNameReleased(title: string) {
+        const tracks = await this.trackRepository.findAll({
+            where: {
+                title: {
+                    [Op.iLike]: `%${title}%`
+                },
+                releaseId: {
+                    [Op.ne]: 0
+                }
+            },
+            include: [
+                {
+                    model: Artist,
+                    through: { attributes: [] },
+                },
+                {
+                    model: Release,
+                    attributes: ['id', 'title', 'cover'],
+                },
+            ],
+        });
+        if (!tracks.length) {
+            throw new NotFoundException(`Треки по запросу: "${title}" не найдены`)
+        }
+        return tracks;
+    }
+
+    async findMostPopularTracks(): Promise<Track[]> {
+        return await this.trackRepository.findAll({
+            attributes: ['id', 'title', 'audio', 'explicit_content', 'listens'],
+            order: [['listens', 'DESC']],
+            limit: 10,
+            where: {
+                releaseId: {
+                    [Op.ne]: null,
+                },
+            },
+            include: [
+                {
+                    model: Artist,
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] },
+                },
+                {
+                    model: Release,
+                    attributes: ['id', 'title', 'cover'], // Поля из таблицы releases
+                },
+            ],
+        });
+    }
+
+    async incrementListens(id: number): Promise<Track> {
+        const track = await this.trackRepository.findByPk(id);
+        if (!track) {
+            throw new Error('Трек не найден');
+        }
+
+        track.listens += 1;
+        await track.save();
+
+        return track;
+    }
+
 }

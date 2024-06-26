@@ -63,4 +63,31 @@ export class TracksController {
         return this.tracksService.findAllTracksWithoutRelease();
     }
 
+    @Get('search-released/:title')
+    async findTracksByNameReleased(@Param('title') title: string) {
+        try {
+            return await this.tracksService.findTracksByNameReleased(title);
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                return { message: error.message };
+            }
+            throw error;
+        }
+    }
+
+    @Get('/top')
+    async findMostPopularTracks() {
+        return this.tracksService.findMostPopularTracks();
+    }
+
+    @Get('/view/:id')
+    async addListen(@Param('id') id: number) {
+        return this.tracksService.incrementListens(id);
+    }
+
+    @Get('/released')
+    async findAllReleased() {
+        return this.tracksService.findAllTracksReleased();
+    }
+
 }

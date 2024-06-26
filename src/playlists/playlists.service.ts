@@ -6,6 +6,7 @@ import {CreatePlaylistDto} from "./dto/create-playlist.dto";
 import {Track} from "../tracks/tracks.model";
 import {Artist} from "../artists/artists.model";
 import {Release} from "../releases/releases.model";
+import {User} from "../users/users.model";
 
 @Injectable()
 export class PlaylistsService {
@@ -42,10 +43,10 @@ export class PlaylistsService {
         });
 
         if (!deletedTrack) {
-            throw new Error('Track not found in the playlist');
+            throw new Error('Трек не найден в данном плейлисте');
         }
 
-        return { message: 'Track deleted from playlist' };
+        return { message: 'Трек удалён из плейлиста' };
     }
 
     async getPlaylistById(id:number) {
@@ -64,6 +65,10 @@ export class PlaylistsService {
                         attributes: ['id', 'title', 'cover'],
                     },
                 ],
+            },
+            {
+                model: User,
+                attributes: ['id', 'login'],
             }]
         });
     }
@@ -83,7 +88,7 @@ export class PlaylistsService {
 
     async updatePlaylist(id: number, dto: CreatePlaylistDto) {
         const playlist = await this.playlistRepository.findByPk(id);
-        await playlist.save();
+        await playlist.update(dto);
         return playlist;
     }
 
