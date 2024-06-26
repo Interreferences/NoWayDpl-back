@@ -60,17 +60,46 @@ export class ArtistsService {
                             attributes: ['id', 'name'], // Поля из таблицы artists
                             through: { attributes: [] }, // Исключаем выборку полей из таблицы связи track_artists
                         },
+                        {
+                            model: Release,
+                            attributes: ['id', 'title', 'cover'],
+                            include: [
+                                {
+                                    model: ReleaseType,
+                                    attributes: ['id', 'title']
+                                },
+                                {
+                                    model: Artist,
+                                    attributes: ['id', 'name'],
+                                    through: { attributes: [] }, // Отключить промежуточную таблицу в результате
+                                },
+                                {
+                                    model: Label,
+                                    attributes: ['id', 'name'],
+                                    through: { attributes: [] }, // Отключить промежуточную таблицу в результате
+                                },
+                            ],
+                        },
                     ],
                 },
                 {
                     model:Release,
-                    attributes: ['id', 'title', 'cover', 'published', 'releaseDate'],
+                    attributes: ['id', 'title', 'cover', 'releaseDate'],
                     through: { attributes: [] },
                     include: [
                         {
-                            model: Artist,
+                            model: ReleaseType,
+                            attributes: ['id', 'title'],
+                        },
+                        {
+                            model:Artist,
                             attributes: ['id', 'name'],
-                            through: { attributes: [] }, // Отключить промежуточную таблицу в результате
+                            through: { attributes: [] },
+                        },
+                        {
+                            model: Label,
+                            attributes: ['id', 'name'],
+                            through: { attributes: [] },
                         },
                     ],
                 },
