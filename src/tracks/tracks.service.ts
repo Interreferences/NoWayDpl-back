@@ -174,4 +174,20 @@ export class TracksService {
         });
     }
 
+    async findAllTracksWithoutRelease() {
+        return await this.trackRepository.findAll({
+            where: {
+                releaseId: null
+            },
+            attributes: ['id', 'title', 'audio', 'explicit_content', 'listens'],
+            include: [
+                {
+                    model: Artist,
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] },
+                },
+            ],
+        });
+    }
+
 }

@@ -58,4 +58,9 @@ export class TracksController {
         return this.tracksService.findTracksByTitle(title);
     }
 
+    @Get('/withoutRelease')
+    async findAllTracksWithoutRelease() {
+        return this.tracksService.findAllTracksWithoutRelease();
+    }
+
 }
