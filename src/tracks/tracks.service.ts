@@ -257,7 +257,7 @@ export class TracksService {
                 },
                 {
                     model: Release,
-                    attributes: ['id', 'title', 'cover'], // Поля из таблицы releases
+                    attributes: ['id', 'title', 'cover'],
                 },
             ],
         });

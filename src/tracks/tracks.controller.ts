@@ -75,7 +75,7 @@ export class TracksController {
         }
     }
 
-    @Get('/top')
+    @Get('/user/top')
     async findMostPopularTracks() {
         return this.tracksService.findMostPopularTracks();
     }
@@ -85,7 +85,7 @@ export class TracksController {
         return this.tracksService.incrementListens(id);
     }
 
-    @Get('/released')
+    @Get('/user/released')
     async findAllReleased() {
         return this.tracksService.findAllTracksReleased();
     }
