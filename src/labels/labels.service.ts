@@ -38,6 +38,11 @@ export class LabelsService {
                             attributes: ['id', 'name'],
                             through: { attributes: [] },
                         },
+                        {
+                            model: Label,
+                            attributes: ['id', 'name'],
+                            through: { attributes: [] },
+                        },
                     ],
                 },
             ],
