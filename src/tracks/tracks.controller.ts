@@ -58,7 +58,7 @@ export class TracksController {
         return this.tracksService.findTracksByTitle(title);
     }
 
-    @Get('/withoutRelease')
+    @Get('/admin/withoutRelease')
     async findAllTracksWithoutRelease() {
         return this.tracksService.findAllTracksWithoutRelease();
     }

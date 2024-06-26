@@ -73,7 +73,7 @@ export class TracksService {
                 },
                 {
                     model: Release,
-                    attributes: ['id', 'title', 'cover', 'published'],
+                    attributes: ['id', 'title', 'cover'],
                     include: [
                         {
                             model: ReleaseType,
