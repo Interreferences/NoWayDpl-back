@@ -125,6 +125,10 @@ export class ReleasesService {
                             model: Genres,
                             attributes: ['id', 'name'],
                         },
+                        {
+                            model: Release,
+                            attributes: ['id', 'title', 'cover'],
+                        },
                     ]
                 },
             ],
