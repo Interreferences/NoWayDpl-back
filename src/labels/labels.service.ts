@@ -31,12 +31,12 @@ export class LabelsService {
                 {
                 model: Release,
                 through: { attributes: [] },
-                attributes: ['id', 'title', 'cover', 'published', 'releaseDate'],
+                attributes: ['id', 'title', 'cover', 'releaseDate'],
                     include: [
                         {
                             model: Artist,
                             attributes: ['id', 'name'],
-                            through: { attributes: [] }, // Отключить промежуточную таблицу в результате
+                            through: { attributes: [] },
                         },
                     ],
                 },
@@ -73,7 +73,7 @@ export class LabelsService {
         });
 
         if (!labels.length) {
-            throw new NotFoundException(`Labels with name containing "${name}" not found`);
+            throw new NotFoundException(`Лейблы по запросу: "${name}" не найдены`);
         }
         return { labels, total };
     }
