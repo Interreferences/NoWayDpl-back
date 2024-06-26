@@ -29,21 +29,9 @@ export class TracksController {
     }
 
     @Get()
-    async findAll(
-        @Query('limit') limit: string,
-        @Query('offset') offset: string,
-        @Query('withRelease') withRelease: string
-    ) {
-        try {
-            const limitNumber = parseInt(limit, 10) || 10;  // Устанавливаем значение по умолчанию для limit
-            const offsetNumber = parseInt(offset, 10) || 0;  // Устанавливаем значение по умолчанию для offset
-            const withReleaseBool = withRelease === 'true'; // Преобразуем строку 'true'/'false' в boolean
-
-            return await this.tracksService.findAllTracks(limitNumber, offsetNumber, withReleaseBool);
-        } catch (error) {
-            throw error;
+    async findAll() {
+            return await this.tracksService.findAllTracks();
         }
-    }
 
     @Get(':id')
     async findOne(@Param('id') id: number) {
@@ -66,25 +54,8 @@ export class TracksController {
     }
 
     @Get('search/:title')
-    async findTracksByName(
-        @Param('title') title: string,
-        @Query('limit') limit: string,
-        @Query('offset') offset: string,
-        @Query('withRelease') withRelease: string
-    ) {
-        try {
-            const limitNumber = parseInt(limit, 10) || 10;  // Устанавливаем значение по умолчанию для limit
-            const offsetNumber = parseInt(offset, 10) || 0;  // Устанавливаем значение по умолчанию для offset
-            const withReleaseBool = withRelease === 'true'; // Преобразуем строку 'true'/'false' в boolean
-
-            return await this.tracksService.findTracksByName(title, limitNumber, offsetNumber, withReleaseBool);
-        } catch (error) {
-            if (error instanceof NotFoundException) {
-                return { message: error.message };
-            }
-            throw error;
-        }
+    async findTracksByName(@Param('title') title: string) {
+        return this.tracksService.findTracksByTitle(title);
     }
-
 
 }

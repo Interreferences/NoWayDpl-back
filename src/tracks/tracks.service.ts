@@ -11,6 +11,7 @@ import {Genres} from "../genres/genres.model";
 import {Release} from "../releases/releases.model";
 import {Label} from "../labels/label.model";
 import {ReleaseType} from "../release-type/release-type.model";
+
 @Injectable()
 export class TracksService {
     constructor(
@@ -39,18 +40,8 @@ export class TracksService {
         return track;
     }
 
-    async findAllTracks(limit: number, offset: number, withRelease: boolean): Promise<{ tracks: Track[], total: number }> {
-        let whereClause: any = {};
-
-        if (withRelease) {
-            whereClause.releaseId = {
-                [Op.ne]: 0
-            };
-        } else {
-            whereClause.releaseId = 0;
-        }
-
-        const { rows: tracks, count: total } = await this.trackRepository.findAndCountAll({
+    async findAllTracks() {
+        const tracks = await this.trackRepository.findAndCountAll({
             attributes: ['id', 'title', 'audio', 'explicit_content', 'listens'],
             include: [
                 {
@@ -63,12 +54,9 @@ export class TracksService {
                     attributes: ['id', 'title', 'cover'], // Поля из таблицы releases
                 },
             ],
-            where: whereClause,
-            limit,
-            offset
         });
 
-        return { tracks, total };
+        return tracks;
     }
 
     async findTrackById(id: number) {
@@ -76,7 +64,7 @@ export class TracksService {
             include: [
                 {
                     model: Artist,
-                    attributes: ['id', 'name', 'avatar', 'createdAt'], // Поля из таблицы artists
+                    attributes: ['id', 'name', 'avatar'], // Поля из таблицы artists
                     through: { attributes: [] }, // Исключаем выборку полей из таблицы связи track_artists
                 },
                 {
@@ -164,36 +152,26 @@ export class TracksService {
         await track.destroy();
     }
 
-    async findTracksByName(title: string, limit: number, offset: number, withRelease: boolean): Promise<{ tracks: Track[], total: number }> {
-        let whereClause: any = {
-            title: {
-                [Op.iLike]: `%${title}%`
-            }
-        };
-
-        if (withRelease) {
-            whereClause.releaseId = {
-                [Op.ne]: 0
-            };
-        }
-
-        const { rows: tracks, count: total } = await this.trackRepository.findAndCountAll({
-            where: whereClause,
+    async findTracksByTitle(title: string): Promise<Track[]> {
+        return this.trackRepository.findAll({
+            where: {
+                title: {
+                    [Op.like]: `%${title}%`,
+                },
+            },
+            attributes: ['id', 'title', 'audio', 'explicit_content', 'listens'],
             include: [
                 {
                     model: Artist,
-                    through: { attributes: [] }, // Отключить промежуточную таблицу в результате
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] },
+                },
+                {
+                    model: Release,
+                    attributes: ['id', 'title', 'cover'],
                 },
             ],
-            limit,
-            offset
         });
-
-        if (!tracks.length) {
-            throw new NotFoundException(`Треки по запросу: "${title}" не найдены`);
-        }
-
-        return { tracks, total };
     }
 
 }

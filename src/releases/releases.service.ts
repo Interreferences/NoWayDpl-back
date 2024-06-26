@@ -78,18 +78,9 @@ export class ReleasesService {
         return release;
     }
 
-    async findAllReleases(includeFutureReleases: boolean = false, limit: number, offset: number) {
-        const whereClause: any = {};
-
-        if (!includeFutureReleases) {
-            const currentDateTime = new Date();
-            whereClause.releaseDate = {
-                [Op.lte]: currentDateTime
-            };
-        }
-
-        const queryOptions: any = {
-            attributes: ['id', 'title', 'cover', 'published', 'releaseDate'],
+    async findAllReleases() {
+        const releases = await this.releaseRepository.findAndCountAll({
+            attributes: ['id', 'title', 'cover', 'releaseDate'],
             include: [
                 {
                     model: ReleaseType,
@@ -98,16 +89,13 @@ export class ReleasesService {
                 {
                     model: Artist,
                     attributes: ['id', 'name'],
-                    through: { attributes: [] }, // Отключить промежуточную таблицу в результате
+                    through: { attributes: [] },
                 },
             ],
-            where: whereClause,
-            limit,
-            offset
-        };
-
-        return await this.releaseRepository.findAndCountAll(queryOptions);
+            })
+        return releases;
     }
+
 
     async findReleaseById(id: number) {
         const release = await this.releaseRepository.findByPk(id, {

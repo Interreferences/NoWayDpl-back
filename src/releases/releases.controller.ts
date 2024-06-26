@@ -29,16 +29,8 @@ export class ReleasesController {
     }
 
     @Get()
-    async findAll(
-        @Query('includeFutureReleases') includeFutureReleases: string,
-        @Query('limit') limit: string,
-        @Query('offset') offset: string
-    ) {
-        const includeFuture = includeFutureReleases === 'true';
-        const limitNumber = parseInt(limit, 10) || 10;
-        const offsetNumber = parseInt(offset, 10) || 0;
-
-        return this.releasesService.findAllReleases(includeFuture, limitNumber, offsetNumber);
+    async findAll() {
+        return this.releasesService.findAllReleases();
     }
 
     @Get(':id')
