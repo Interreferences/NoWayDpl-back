@@ -93,7 +93,7 @@ export class ReleasesService {
                 },
                 {
                     model: Label,
-                    attributes: ['id', 'title'],
+                    attributes: ['id', 'name'],
                     through: { attributes: [] },
                 },
             ],
